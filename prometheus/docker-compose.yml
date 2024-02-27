@@ -1,0 +1,24 @@
+services:
+    prometheus:
+        image: prom/prometheus:latest
+        command: ["--config.file=/prometheus-config/prometheus.yml"]
+        volumes:
+            - ./prometheus-config:/prometheus-config
+            - ./data/prometheus:/prometheus
+        ports:
+            - 9090:9090
+        networks:
+            - prometheus
+    grafana:
+        image: grafana/grafana
+        volumes:
+            - ./data/grafana:/var/lib/grafana
+        ports:
+            - 3000:3000
+        depends_on:
+            - prometheus
+        networks:
+            - prometheus
+networks:
+    prometheus:
+        driver: bridge
